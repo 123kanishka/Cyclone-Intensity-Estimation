@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyclone Intensity Estimation</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-icon">&#127786;</span>
+      <div>
+        <h1>Cyclone Intensity Estimation</h1>
+        <p>Satellite infrared analysis for tropical cyclone intensity</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel input-panel">
+      <div class="tabs">
+        <button class="tab-button active" data-tab="parameters">Storm Parameters</button>
+        <button class="tab-button" data-tab="image">IR Image Upload</button>
+      </div>
+
+      <form id="parameters-form" class="tab-content active" data-tab-content="parameters">
+        <label>
+          Eye Temperature (&deg;C)
+          <input type="number" step="0.1" id="eye_temperature_c" value="-10" required>
+        </label>
+        <label>
+          Surrounding Cloud-Top Temperature (&deg;C)
+          <input type="number" step="0.1" id="cloud_top_temperature_c" value="-70" required>
+        </label>
+        <label>
+          Eye / Core Diameter (km)
+          <input type="number" step="1" id="eye_diameter_km" value="35" required>
+        </label>
+        <label>
+          Cloud Pattern Symmetry
+          <input type="range" min="0" max="100" id="symmetry_score" value="60">
+          <span class="range-value" id="symmetry_score_value">60</span>
+        </label>
+        <label>
+          Latitude (&deg;, negative for southern hemisphere)
+          <input type="number" step="0.1" id="latitude" value="15" required>
+        </label>
+        <label>
+          Sea Surface Temperature (&deg;C)
+          <input type="number" step="0.1" id="sea_surface_temp_c" value="29" required>
+        </label>
+        <button type="submit" class="primary-button">Estimate Intensity</button>
+      </form>
+
+      <form id="image-form" class="tab-content" data-tab-content="image">
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="image-input" accept="image/*" hidden>
+          <span id="dropzone-text">Click to select an infrared satellite image</span>
+          <img id="image-preview" alt="Selected satellite image preview" hidden>
+        </label>
+        <button type="submit" class="primary-button">Analyze Image</button>
+      </form>
+    </section>
+
+    <section class="panel results-panel">
+      <div id="empty-state" class="empty-state">
+        <p>Enter storm parameters or upload an IR image to estimate intensity.</p>
+      </div>
+
+      <div id="results" class="results" hidden>
+        <div class="gauge-wrap">
+          <canvas id="gauge" width="260" height="150"></canvas>
+          <div class="gauge-readout">
+            <span id="wind-speed-value">--</span>
+            <span class="unit">knots</span>
+          </div>
+        </div>
+
+        <div class="category-badge" id="category-badge">
+          <span id="category-name">--</span>
+        </div>
+        <p class="category-description" id="category-description"></p>
+
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric-label">Wind Speed</span>
+            <span class="metric-value" id="wind-speed-kmph">--</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Central Pressure</span>
+            <span class="metric-value" id="central-pressure">--</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">Confidence</span>
+            <span class="metric-value" id="confidence">--</span>
+          </div>
+        </div>
+
+        <div class="probabilities" id="probabilities"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
